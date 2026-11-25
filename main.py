@@ -1,49 +1,49 @@
-"""One-Line Office Jokes — entry program.
+"""One-Line Office Jokes entry: emit a single office joke line.
 
-The whole entry is a single joke about office life. When the grader runs
-this program it must produce exactly one file, /output/entry.txt, holding
-that one line and nothing else: no trailing newline, no extra whitespace,
-no second line.
-
-The joke: a screen-share slip in front of a client. The laugh lands in the
-last few words, when the desktop wallpaper turns out to be a beach the
-narrator will never afford.
+The program assembles the joke from a concrete scene and a closing turn,
+checks the result against the house gate, and writes it as UTF-8 bytes to
+/output/entry.txt without a trailing newline.
 """
 
+import os
 import sys
-from pathlib import Path
 
-JOKE = (
-    "I shared the wrong screen during my presentation, and the client saw "
-    "my desktop wallpaper: a beach I will never afford."
-)
+SCENE = "The fire drill went off mid-meeting"
+TURN = "and everyone left like it was the agenda they'd been waiting for."
 
-# The house gate for this bounty: 1 to 199 characters, one line, UTF-8.
 MIN_CHARS = 1
 MAX_CHARS = 199
+DEFAULT_TARGET = "/output/entry.txt"
 
 
-def check_line(text: str) -> None:
-    """Refuse to write anything that would fail the entry gate."""
-    if not MIN_CHARS <= len(text) <= MAX_CHARS:
-        raise SystemExit(f"line is {len(text)} chars, gate wants 1-199")
+def build_line():
+    # Scene first, turn last: the laugh has to land in the final words.
+    return SCENE + ", " + TURN
+
+
+def gate_ok(text):
+    if not (MIN_CHARS <= len(text) <= MAX_CHARS):
+        return False
     if "\n" in text or "\r" in text:
-        raise SystemExit("line must be a single line")
-    if not text.strip():
-        raise SystemExit("line must not be only whitespace")
-    text.encode("utf-8")  # raises if the line is not valid UTF-8
+        return False
+    return bool(text.strip())
 
 
-def main(argv: list[str]) -> int:
-    check_line(JOKE)
-    # An explicit path is accepted only so the line can be checked locally;
-    # the grader runs with no argument, which writes /output/entry.txt.
-    target = Path(argv[1]) if len(argv) > 1 else Path("/output/entry.txt")
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(JOKE, encoding="utf-8")
-    print(f"wrote {len(JOKE)} chars to {target}")
+def emit(text, target):
+    folder = os.path.dirname(target)
+    if folder:
+        os.makedirs(folder, exist_ok=True)
+    with open(target, "wb") as handle:
+        handle.write(text.encode("utf-8"))
+
+
+def main(argv):
+    line = build_line()
+    if not gate_ok(line):
+        return 1
+    emit(line, argv[1] if len(argv) > 1 else DEFAULT_TARGET)
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+    sys.exit(main(sys.argv))

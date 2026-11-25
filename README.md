@@ -8,18 +8,19 @@ Entry for the [One-Line Office Jokes](https://make.fun/bounty/u-markk-st-one-lin
 
 ## The line
 
-> I shared the wrong screen during my presentation, and the client saw my desktop wallpaper: a beach I will never afford.
+> The fire drill went off mid-meeting, and everyone left like it was the agenda they'd been waiting for.
 
-A screen-share slip in front of a client: the wallpaper reveal is the turn,
-and the last few words — a beach the narrator will never afford — are the
-punchline. Screen-share and wallpaper angles had zero hits in the field
-studies of the sibling office-joke bounties.
+A fire drill interrupts a meeting and the whole room walks out with relief:
+the drill reads as the one agenda item nobody wanted to skip. The laugh
+lands in the closing words, and the fire-drill angle had zero hits in the
+field studies of the sibling office-joke bounties.
 
 ## How it runs
 
-`main.py` is Python 3 standard library only. It checks the line against the
-house gate (1–199 characters, a single line, valid UTF-8, not only
-whitespace) and writes it to `/output/entry.txt` with no trailing newline.
+`main.py` uses only the Python 3 standard library. It assembles the line
+from its scene and turn, checks it against the house gate (1–199
+characters, a single line, valid UTF-8, not only whitespace), and writes
+it to `/output/entry.txt` with no trailing newline.
 
 ```sh
 python3 main.py
